@@ -1,19 +1,22 @@
 import { Route, Routes } from "react-router-dom";
 import App from "../App";
+import Layout from "./Layout";
+import Home from "../Home";
+import Questions from "../Question";
 
 const AppRoutes = () => {
-    return ( 
-        <Routes>
-        <Route element={<Layout />}>
-          <Route path="/home" element={<App />} />
-          {/* <Route path="/perfil/:id" element={<Profile />} /> */}
-        </Route>
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index path="/" element={<Home />} />
+        <Route index path="/questions" element={<Questions />} />
+      </Route>
 
-        {/* <Route path="*" element={<NotFound />} />
+      {/* <Route path="*" element={<NotFound />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} /> */}
-      </Routes>
-     );
+    </Routes>
+  );
 }
- 
+
 export default AppRoutes;
