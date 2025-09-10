@@ -1,10 +1,15 @@
-import { ArrowLeft, Code, Star, Trophy } from "lucide-react";
+import { ArrowLeft, Code, Star, Trophy, CheckCircle, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Questions = () => {
   const [points, setPoints] = useState(0);
   const [currentChallenge, setCurrentChallenge] = useState(0);
   const [answer, setAnswer] = useState("");
+    const [buttonState, setButtonState] = useState("default"); 
+  const [feedback, setFeedback] = useState(null);
+  
+  const navigate = useNavigate();
 
   // 🔹 Desafios
   const codes = [
@@ -15,7 +20,7 @@ const Questions = () => {
         "Você deve fazer uma operação matemática simples: somar os números 5 e 3. Depois, use a função print() para exibir o resultado dessa soma na tela.",
       hints:
         "💡 Lembre-se: print() serve para mostrar algo na tela. A operação de soma é feita com o sinal de adição (+).",
-      result: "print(5 + 3)",
+      result: "print(5+3)",
     },
     {
       id: 2,
@@ -73,13 +78,27 @@ const Questions = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (answer.trim() === challenge.result.trim()) {
-      alert("✅ Correto!");
       setPoints((prev) => prev + 10);
       setAnswer("");
-      setCurrentChallenge((prev) => prev + 1);
+       setButtonState("success");
+      setFeedback({ type: "success", message: "✅ Correto!" });
     } else {
-      alert("❌ Resposta incorreta, tente novamente!");
+      setButtonState("error");
+      setFeedback({ type: "error", message: "❌ Resposta incorreta, tente novamente!" });
     }
+  };
+
+  // 🔹 Avançar para o próximo desafio
+  const handleNextChallenge = () => {
+    setFeedback(null);
+    setButtonState("default");
+    setCurrentChallenge((prev) => prev + 1);
+  };
+
+  // 🔹 Fechar feedback no erro
+  const handleCloseFeedback = () => {
+    setFeedback(null);
+    setButtonState("default");  
   };
 
   // 🔹 Tela final
@@ -92,14 +111,15 @@ const Questions = () => {
         <p className="text-lg">Pontuação final: {points} pontos</p>
         <button
           onClick={() => {
-            setPoints(0);
             setCurrentChallenge(0);
-            localStorage.removeItem("points");
+            setPoints(0);
             localStorage.removeItem("challenge");
+            localStorage.removeItem("points");
+            navigate("/");
           }}
           className="mt-4 bg-fuchsia-700 hover:bg-fuchsia-800 px-4 py-2 rounded-lg font-semibold"
         >
-          🔄 Recomeçar
+        🏠 Volte para Home
         </button>
       </section>
     );
@@ -148,13 +168,19 @@ const Questions = () => {
                 />
               </div>
 
-              {/* Botão */}
-              <div className="flex justify-center bg-fuchsia-800 rounded-md p-2">
+           {/* Botão */}
+              <div className="flex justify-center mt-2">
                 <button
                   type="submit"
-                  className="flex flex-row gap-2 items-center"
+                  className={`
+                    flex flex-row gap-2 items-center px-4 py-2 rounded-md font-semibold transition-colors duration-300
+                    ${buttonState === "default" ? "bg-fuchsia-800 text-white" : ""}
+                    ${buttonState === "success" ? "bg-green-600 text-yellow-400   -yellow-400" : ""}
+                  `}
                 >
-                  <Star size={15} />
+                  {buttonState === "success" && <Star size={15} className="text-yellow-400 fill-yellow-400"  />}
+                  {buttonState === "default" && <Star size={15}
+/> }
                   <p className="text-md font-semibold">Verificar</p>
                 </button>
               </div>
@@ -162,6 +188,35 @@ const Questions = () => {
           </div>
         </form>
       </div>
+
+      {feedback && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-gradient-to-br to-fuchsia-950 via-black from-indigo-950 transition-all duration-300 border border-white/10  rounded-xl p-6 shadow-xl flex flex-col items-center gap-4 w-80">
+            {feedback.type === "success" ? (
+              <CheckCircle size={40} className="text-green-400" />
+            ) : (
+              <XCircle size={40} className="text-red-400" />
+            )}
+            <p className="text-lg font-semibold">{feedback.message}</p>
+
+            {feedback.type === "success" ? (
+              <button
+                onClick={handleNextChallenge}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg font-semibold"
+              >
+                Próximo Desafio →
+              </button>
+            ) : (
+              <button
+                onClick={handleCloseFeedback}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-semibold"
+              >
+                Tentar Novamente
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 };

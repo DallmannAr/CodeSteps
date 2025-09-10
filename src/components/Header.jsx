@@ -2,6 +2,7 @@ import React from "react";
 import { CircleUserRound, Star, Container } from "lucide-react";
 
 const Header = () => {
+  
   return (
     <header className="w-full fixed top-0 left-0 z-50">
       <div
