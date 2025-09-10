@@ -37,7 +37,7 @@ const CourseCard = () => {
                 <div onClick={() => {
                   setStar(!str.checked)
                 }} key={str.id}>
-                    <Star size={20} className={`${str.checked === true ? "text-yellow-400" : "text-white "}`} />
+                    <Star size={20} className={`${str.checked === true ? "fill-yellow-400 text-yellow-400" : "text-white "}`} />
                 </div>
               ))
             )}
