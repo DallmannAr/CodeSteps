@@ -22,11 +22,10 @@ const Header = () => {
         {/*User ID*/}
         <div className="flex flex-col items-center mx-4 my-2">
           <h2 className="font-semibold text-lg">Jogador: Artur</h2>
-          <p className="font-semibold text-base">Rank: Bronze</p>
+          <p className="text-base">Rank: Bronze</p>
 
           <div className="flex items-center gap-2 mt-2">
             <Container color="#ce8946" />
-
             <div className="w-30 h-2 bg-gray-700 rounded-full overflow-hidden">
               <div className="h-2 bg-green-400 w-[30%] rounded-full"></div>
             </div>
